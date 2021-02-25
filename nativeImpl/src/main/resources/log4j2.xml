@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configuration>
+<Configuration status="WARN" shutdownHook="disable">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %highlight{%-8level} %-16logger{0} %msg%n"/>
+        </Console>
+        <Async name="Async">
+            <AppenderRef ref="Console"/>
+            <LinkedTransferQueue />
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="io.natlib" level="DEBUG" />
+        <Logger name="org.semux.api" level="DEBUG" />
+
+        <Root level="DEBUG">
+            <AppenderRef ref="Async"/>
+        </Root>
+    </Loggers>
+</Configuration>
