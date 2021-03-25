@@ -17,6 +17,15 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -29,6 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jdk.version>11</jdk.version>
+        <start-class>org.pkg.apinative.Native</start-class>
         <graalvm.version>21.0.0.2</graalvm.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven.compiler.source>11</maven.compiler.source>
@@ -43,41 +53,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.camunda.bpm</groupId>
-            <artifactId>camunda-engine</artifactId>
-            <version>7.3.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.bcel</groupId>
-            <artifactId>bcel</artifactId>
-            <version>6.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.graalvm.sdk</groupId>
             <artifactId>graal-sdk</artifactId>
             <version>${graalvm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.51.Final</version>
         </dependency>
     </dependencies>
     <profiles>
@@ -131,27 +109,20 @@
                                 -H:+AllowIncompleteClasspath
                                 -H:+ReportExceptionStackTraces
                                 -H:+ReportUnsupportedElementsAtRuntime
-                                -H:JNIConfigurationFiles=${project.basedir}/src/main/resources/META-INF/native-image/jni-config.json
-                                -H:ReflectionConfigurationFiles=${project.basedir}/src/main/resources/META-INF/native-image/reflect-config.json
                                 -H:GenerateDebugInfo=1
                                 -H:IncludeResources=.*
+                                -H:ConfigurationFileDirectories=src/main/resources/META-INF/native-image
                                 -Djava.library.path=$(pwd)
                                 --initialize-at-build-time=io.icte.go
-                                --initialize-at-run-time=io.netty.util.internal.logging.Log4JLogger
-                                --initialize-at-run-time=org.apache.log4j.Category
-                                --initialize-at-run-time=org.apache.log4j.Logger
-                                --initialize-at-run-time=org.apache.log4j
-                                --initialize-at-run-time=io.netty
-                                --delay-class-initialization-to-runtime=io.netty.handler.codec.http.HttpObjectEncoder
-                                --trace-class-initialization=io.netty.util.internal.logging.Log4JLogger
-                                --trace-class-initialization=org.apache.log4j.Category
-                                --trace-class-initialization=org.apache.log4j.Logger
                                 --verbose
                                 --no-server
                                 --no-fallback
                             </buildArgs>
                         </configuration>
                     </plugin>
+<!--                    -H:JNIConfigurationFiles=${project.basedir}/src/main/resources/META-INF/native-image/jni-config.json-->
+<!--                    -H:ReflectionConfigurationFiles=${project.basedir}/src/main/resources/META-INF/native-image/reflect-config.json-->
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
